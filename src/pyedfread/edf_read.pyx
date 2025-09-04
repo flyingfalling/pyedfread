@@ -446,10 +446,10 @@ def sanitize_samples_by_flags(s):
     s.loc[ (SAMPLE_RIGHT & f) != 0, 'eye' ] = 1;
     s.loc[ ((SAMPLE_LEFT & f) & (SAMPLE_RIGHT & s['flags'])) != 0 , 'eye' ] = 2; #2 for binoc i guess.
 
-    print("VALUES");
-    print( s[ s.eye == 0 ] );
-    print( s[ s.eye == 1 ] );
-    print( s[ s.eye == 2 ] );
+    #print("VALUES");
+    #print( s[ s.eye == 0 ] );
+    #print( s[ s.eye == 1 ] );
+    #print( s[ s.eye == 2 ] );
     
     #print("HELLO SIR");
     #print(s.columns);
@@ -458,7 +458,7 @@ def sanitize_samples_by_flags(s):
     #REV: oh wait, it shares row...
     lcols=[ c for c in s.columns if '_left' in c ];
     rcols=[ c for c in s.columns if '_right' in c ];
-
+    
     #print(lcols);
     #print(rcols);
     
