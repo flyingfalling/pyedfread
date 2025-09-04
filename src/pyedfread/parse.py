@@ -12,7 +12,7 @@ def read_edf(
     message_filter=None,
     trial_marker="TRIALID",
     ftime=True,
-    exclude_vel_cols=True,
+    exclude_vel_cols=False,
 ):
     """
     Parse an EDF file into a pandas.DataFrame.
@@ -77,7 +77,7 @@ def read_edf(
     if( True == ftime ):
         samples = edf_read.samples_to_ftime(samples);
         pass;
-
+    
     if( True == exclude_vel_cols ):
         velcols=[ c for c in samples.columns if 'vel' in c ];
         samples.loc[:, velcols] = np.nan;
@@ -85,6 +85,8 @@ def read_edf(
     
     ## Reorder samples column to be in same order as previously (based on FSAMPLE struct)
     samples = samples[ list(edf_read.sample_columns) ];
+
+    samples = edf_read.sanitize_samples_by_flags(samples);
     
     return samples, events, messages
 
