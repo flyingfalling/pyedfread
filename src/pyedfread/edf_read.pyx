@@ -431,15 +431,16 @@ def samples_to_ftime(samples):
 
 ## REV: It *says* that all non-included values will be set to MISSING_DATA (-32000ish), but I do not see that, I see random noise.
 def sanitize_samples_by_flags(s):
-    s = s.copy().reset_index(drop=True);
+    s = s.copy();
+    s = s.reset_index(drop=True);
     
-    s.loc[:, 'flags'] = s['flags'].astype(np.uint16);
+    s['flags'] = s['flags'].astype(np.uint16);
             
         
     if( 'eye' in s.columns ):
         raise Exception("WTF eye already in samples");
-    s.loc[:, 'eye'] = -1;
-    s.loc[:, 'eye'] = s.eye.astype(np.int8);
+    s['eye'] = -1;
+    s['eye'] = s.eye.astype(np.int8);
     
     f = s['flags'];
     
