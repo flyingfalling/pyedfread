@@ -431,40 +431,33 @@ def samples_to_ftime(samples):
 
 ## REV: It *says* that all non-included values will be set to MISSING_DATA (-32000ish), but I do not see that, I see random noise.
 def sanitize_samples_by_flags(s):
-    s = s.reset_index(drop=True);
-    s['flags'] = s['flags'].astype(np.uint16);
+    s = s.copy().reset_index(drop=True);
     
+    s.loc[:, 'flags'] = s['flags'].astype(np.uint16);
+            
+        
     if( 'eye' in s.columns ):
         raise Exception("WTF eye already in samples");
-    s['eye'] = -1;
-    s['eye'] = s.eye.astype(np.int8);
+    s.loc[:, 'eye'] = -1;
+    s.loc[:, 'eye'] = s.eye.astype(np.int8);
     
     f = s['flags'];
-
+    
     #REV: "truth statements" dont work.
     s.loc[ (SAMPLE_LEFT & f) != 0, 'eye' ] = 0;
     s.loc[ (SAMPLE_RIGHT & f) != 0, 'eye' ] = 1;
     s.loc[ ((SAMPLE_LEFT & f) & (SAMPLE_RIGHT & s['flags'])) != 0 , 'eye' ] = 2; #2 for binoc i guess.
 
-    #print("VALUES");
-    #print( s[ s.eye == 0 ] );
-    #print( s[ s.eye == 1 ] );
-    #print( s[ s.eye == 2 ] );
     
-    #print("HELLO SIR");
-    #print(s.columns);
-    #exit(0);
-
     #REV: oh wait, it shares row...
     lcols=[ c for c in s.columns if '_left' in c ];
     rcols=[ c for c in s.columns if '_right' in c ];
-    
-    #print(lcols);
-    #print(rcols);
-    
+        
     
     s.loc[ (s.eye==0), rcols ] = np.nan;
     s.loc[ (s.eye==1), lcols ] = np.nan;
+
+    
     
     haspupilsize = 0 == (f & SAMPLE_PUPILSIZE);
     haspupilxy = 0 == (f & SAMPLE_PUPILXY);
@@ -511,4 +504,4 @@ def sanitize_samples_by_flags(s):
         #s[c] = vec_float_or_nan(s[c]);
         pass;
     
-    return s.copy();
+    return s;
