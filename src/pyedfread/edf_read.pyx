@@ -447,18 +447,19 @@ def sanitize_samples_by_flags(s):
     #REV: "truth statements" dont work.
     s.loc[ (SAMPLE_LEFT & f) != 0, 'eye' ] = 0;
     s.loc[ (SAMPLE_RIGHT & f) != 0, 'eye' ] = 1;
-    s.loc[ ((SAMPLE_LEFT & f) & (SAMPLE_RIGHT & s['flags'])) != 0 , 'eye' ] = 2; #2 for binoc i guess.
-
+    s.loc[ ((SAMPLE_LEFT & f) & (SAMPLE_RIGHT & f)) != 0 , 'eye' ] = 2; #2 for binoc i guess.
+    
     
     #REV: oh wait, it shares row...
     lcols=[ c for c in s.columns if '_left' in c ];
     rcols=[ c for c in s.columns if '_right' in c ];
         
-    
-    s.loc[ (s.eye==0), rcols ] = np.nan;
-    s.loc[ (s.eye==1), lcols ] = np.nan;
 
-    
+    ## Delete right eye data if left eye recorded only
+    s.loc[ (s.eye==0), rcols ] = np.nan;
+
+    ## Delete left eye data if right eye recorded only
+    s.loc[ (s.eye==1), lcols ] = np.nan;
     
     haspupilsize = 0 == (f & SAMPLE_PUPILSIZE);
     haspupilxy = 0 == (f & SAMPLE_PUPILXY);
