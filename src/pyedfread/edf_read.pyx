@@ -444,11 +444,12 @@ def sanitize_samples_by_flags(s):
     
     f = s['flags'];
     
-    #REV: "truth statements" dont work.
-    s.loc[ (SAMPLE_LEFT & f) != 0, 'eye' ] = 0;
-    s.loc[ (SAMPLE_RIGHT & f) != 0, 'eye' ] = 1;
-    s.loc[ ((SAMPLE_LEFT & f) & (SAMPLE_RIGHT & s['flags'])) != 0 , 'eye' ] = 2; #2 for binoc i guess.
-
+    #REV: "truth statements" dont work in this weird PYX thing for ints.
+    # LEFT/RIGHT/BINOCULAR are defined in edf_data.pyx as 0, 1, 2;
+    s.loc[ (SAMPLE_LEFT & f) != 0, 'eye' ] = LEFT;
+    s.loc[ (SAMPLE_RIGHT & f) != 0, 'eye' ] = RIGHT;
+    s.loc[ ((SAMPLE_LEFT & f) != 0) & ((SAMPLE_RIGHT & f) != 0) , 'eye' ] = BINOCULAR;
+    
     
     #REV: oh wait, it shares row...
     lcols=[ c for c in s.columns if '_left' in c ];
