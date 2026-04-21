@@ -84,11 +84,11 @@ def read_edf(
         pass;
     
     ## Reorder samples column to be in same order as previously (based on FSAMPLE struct)
-    samples = samples[ list(edf_read.sample_columns) ];
+    samples = samples[ list(edf_read.sample_columns) ].copy();
     
-    samples = edf_read.sanitize_samples_by_flags(samples);
+    samples2 = edf_read.sanitize_samples_by_flags(samples);
         
-    return samples, events, messages
+    return samples2, events, messages
 
 
 def trials2events(events, messages):

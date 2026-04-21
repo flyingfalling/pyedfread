@@ -267,7 +267,7 @@ def create_sample_array_memory(num_elements, flttype=None):
     mydict['input'] = np.ndarray(num_elements, dtype=np.uint16);
     mydict['buttons'] = np.ndarray(num_elements, dtype=np.uint16);
     mydict['htype'] = np.ndarray(num_elements, dtype=np.int16);
-    mydict['errors'] = np.ndarray(num_elements, dtype=np.uint16);
+    mydict['errors'] = np.ndarray(num_elements, dtype=np.uint16); #REV: make it int32 or something? Fuck
     # mydict['hdata'] is not included but may be added in future
     # (it is reserved for future use).
     # REV: We should check that htype is always 0. If not, this must
@@ -363,7 +363,7 @@ def parse_edf(
             samples['input'][cnt] = fd.fs.input; #36 # extra (input word)
             samples['buttons'][cnt] = fd.fs.buttons  #37 # button state & changes
             samples['htype'][cnt] = fd.fs.htype; #38  # head-tracker data type
-            samples['errors'][cnt] = fd.fs.errors; #39
+            samples['errors'][cnt] = np.array([fd.fs.errors]).astype(np.uint16)[0]; #39
 
             
             '''
