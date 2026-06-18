@@ -14,6 +14,8 @@ from libc.stdio cimport printf
 from pyedfread.edf_data import *
 from pyedfread.data cimport ALLF_DATA
 
+import warnings
+
 import struct
 
 
